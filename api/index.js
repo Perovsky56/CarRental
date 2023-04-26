@@ -55,7 +55,7 @@ app.post('/login', async (req,res) => {
             res.status(422).json('hasło niepoprawne');
         }
     } else {
-        res.json('nie znaleziono');
+        res.status(422).json('nie znaleziono');
     }
 });
 

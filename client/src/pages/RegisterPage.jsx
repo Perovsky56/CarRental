@@ -26,15 +26,15 @@ export default function RegisterPage() {
             <div className="mb-64">
                 <h1 className="mb-4 text-center text-4xl">Rejestracja</h1>
                 <form className="mx-auto max-w-md" onSubmit={registerUser}>
-                    <input type="text"
+                    <input required type="text"
                         placeholder="imię nazwisko"
                         value={name}
                         onChange={ev => setName(ev.target.value)} />
-                    <input type="email"
+                    <input required type="email"
                         placeholder="twój@email.com"
                         value={email}
                         onChange={ev => setEmail(ev.target.value)} />
-                    <input type="password"
+                    <input required type="password"
                         placeholder="hasło"
                         value={password}
                         onChange={ev => setPassword(ev.target.value)} />

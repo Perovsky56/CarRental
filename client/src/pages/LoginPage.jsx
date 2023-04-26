@@ -12,9 +12,13 @@ export default function LoginPage() {
         ev.preventDefault();
         try {
             const {data} = await axios.post('/login', {email, password});
-            setUser(data);
-            alert('Logowanie udane.');
-            setRedirect(true);
+            if(data){
+                setUser(data);
+                alert('Logowanie udane.');
+                setRedirect(true);
+            } else {
+                throw e;
+            }
         } catch (e) {
             alert('Logowanie nieudane.')
         }
@@ -29,10 +33,10 @@ export default function LoginPage() {
             <div className="mb-64">
                 <h1 className="mb-4 text-center text-4xl">Logowanie</h1>
                 <form className="mx-auto max-w-md" onSubmit={handleLogin}>
-                    <input type="email" placeholder="twój@email.com"
+                    <input type="email" required placeholder="twój@email.com"
                     value={email}
                     onChange={ev => setEmail(ev.target.value)} />
-                    <input type="password" placeholder="hasło"
+                    <input type="password" required placeholder="hasło"
                     value={password}
                     onChange={ev => setPassword(ev.target.value)} />
                     <button className="primary">Zaloguj się</button>
