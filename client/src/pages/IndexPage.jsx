@@ -1,7 +1,7 @@
 export default function IndexPage(){
     return (
-        <div>
-            index page here
+        <div className="py-3">
+            Tu będzie strona główna.
         </div>
     );
 }
