@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
 const User = require('./models/User.js');
+const Car = require('./models/Car.js');
 const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
@@ -104,6 +105,33 @@ app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
         uploadedFiles.push(newPath.replace('uploads\\', ''));
     }
     res.json(uploadedFiles);
+});
+
+app.post('/cars', (req, res) => {
+    const {token} = req.cookies;
+    const {
+        title, engineType, gearBoxType,
+        prodYear, seats, addedPhotos,
+        description, features, extraInfo,
+        kilLimit,
+    } = req.body;
+    jsonWebToken.verify(token, jsonWebTokenSecret, {}, async (err, userData) => {
+        if (err) throw err;
+        const carDoc = await Car.create({
+            owner:userData.id,
+            title,
+            engineType,
+            gearBoxType,
+            prodYear,
+            seats,
+            addedPhotos,
+            description,
+            features,
+            extraInfo,
+            kilLimit,
+        });
+        res.json(carDoc);
+    });
 });
 
 app.listen(4000);
