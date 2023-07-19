@@ -124,13 +124,56 @@ app.post('/cars', (req, res) => {
             gearBoxType,
             prodYear,
             seats,
-            addedPhotos,
+            photos:addedPhotos,
             description,
             features,
             extraInfo,
             kilLimit,
         });
         res.json(carDoc);
+    });
+});
+
+app.get('/cars', (req, res) => {
+    const {token} = req.cookies;
+    jsonWebToken.verify(token, jsonWebTokenSecret, {}, async (err, userData) => {
+        const {id} = userData;
+        res.json( await Car.find({owner:id}) );
+    });
+});
+
+app.get('/cars/:id', async (req, res) => {
+    const {id} = req.params;
+    res.json(await Car.findById(id));
+});
+
+app.put('/cars', async (req, res) => {
+    const {token} = req.cookies;
+    const {
+        id, title, engineType, gearBoxType,
+        prodYear, seats, addedPhotos,
+        description, features, extraInfo,
+        kilLimit,
+    } = req.body;
+    jsonWebToken.verify(token, jsonWebTokenSecret, {}, async (err, userData) => {
+        if (err) throw err;
+        const carDoc = await Car.findById(id);
+        if (userData.id === carDoc.owner.toString()){
+            carDoc.set({
+                title,
+                engineType,
+                gearBoxType,
+                prodYear,
+                seats,
+                photos:addedPhotos,
+                description,
+                features,
+                extraInfo,
+                kilLimit,
+            });
+            await carDoc.save();
+            res.json('ok');
+        }
     });
 });
 

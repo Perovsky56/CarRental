@@ -8,7 +8,7 @@ const carSchema = new mongoose.Schema({
     prodYear: Number,
     seats: Number,
     photos: [String],
-    descritpion: String,
+    description: String,
     features: [String],
     extraInfo: String,
     kilLimit: Number,

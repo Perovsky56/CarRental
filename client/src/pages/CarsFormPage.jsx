@@ -1,11 +1,12 @@
 import PhotosUploader from "../PhotosUploader";
 import Features from "../Features";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import AccountNav from "../AccountNav";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 export default function CarsFormPage(){
+    const {id} = useParams();
     const [title, setTitle] = useState('');
     const [engineType, setEngineType] = useState('');
     const [gearBoxType, setGearBoxType] = useState('');
@@ -17,6 +18,24 @@ export default function CarsFormPage(){
     const [extraInfo, setExtraInfo] = useState('');
     const [kilLimit, setKilLimit] = useState('');
     const [redirect, setRedirect] = useState(false);
+    useEffect(() => {
+        if (!id) {
+            return;
+        }
+        axios.get('/cars/'+id).then(response => {
+            const {data} = response;
+            setTitle(data.title);
+            setEngineType(data.engineType);
+            setGearBoxType(data.gearBoxType);
+            setProdYear(data.prodYear);
+            setSeats(data.seats);
+            setAddedPhotos(data.photos);
+            setDescription(data.description);
+            setFeatures(data.features);
+            setExtraInfo(data.extraInfo);
+            setKilLimit(data.kilLimit);
+        });
+    }, [id])
 
     function inputHeader(text){
         return (
@@ -39,14 +58,23 @@ export default function CarsFormPage(){
         );
     };
 
-    async function addNewCar(ev) {
+    async function saveCar(ev) {
         ev.preventDefault();
-        await axios.post('/cars', {
+        const carData = {
             title, engineType, gearBoxType, prodYear,
             seats, addedPhotos, description,
             features, extraInfo, kilLimit
-        });
-        setRedirect(true);
+        };
+        if (id) {
+            await axios.put('/cars', {
+                id,  ...carData   
+            });
+            setRedirect(true);
+        } else {
+            await axios.post('/cars', carData);
+            setRedirect(true);
+        }
+
     };
 
     if (redirect) {
@@ -56,7 +84,7 @@ export default function CarsFormPage(){
     return (
         <div>
             <AccountNav />
-            <form onSubmit={addNewCar}>
+            <form onSubmit={saveCar}>
                 {preInput('Nazwa samochodu', 'Pole to powinno przedstawić markę, model oraz generację samochodu.')}
                 <input type="text" value={title} onChange={ev => setTitle(ev.target.value)} placeholder="np.: Volkswagen Golf 4"/>
 
