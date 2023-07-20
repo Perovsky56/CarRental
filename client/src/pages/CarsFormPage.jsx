@@ -17,6 +17,7 @@ export default function CarsFormPage(){
     const [features, setFeatures] = useState([]);
     const [extraInfo, setExtraInfo] = useState('');
     const [kilLimit, setKilLimit] = useState('');
+    const [price, setPrice] = useState('');
     const [redirect, setRedirect] = useState(false);
     useEffect(() => {
         if (!id) {
@@ -34,6 +35,7 @@ export default function CarsFormPage(){
             setFeatures(data.features);
             setExtraInfo(data.extraInfo);
             setKilLimit(data.kilLimit);
+            setPrice(data.price);
         });
     }, [id])
 
@@ -63,7 +65,7 @@ export default function CarsFormPage(){
         const carData = {
             title, engineType, gearBoxType, prodYear,
             seats, addedPhotos, description,
-            features, extraInfo, kilLimit
+            features, extraInfo, kilLimit, price,
         };
         if (id) {
             await axios.put('/cars', {
@@ -114,10 +116,22 @@ export default function CarsFormPage(){
                 {preInput('Informacje dodatkowe', 'Dodatkowe informacje dotyczące tego pojazdu.')}
                 <textarea value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} placeholder="np.: Pojazd przystosowany do przewozu osób niepełnosprawnych."/>
 
-                {preInput('Dzienny limit kilometrów', 'Maksymalna dzienna ilość kilometrów zwolnionych z dodatkowych opłat.')}
-                <input type="number" value={kilLimit} onChange={ev => setKilLimit(ev.target.value)} max="9999" min="1" placeholder="np.: 500"/>
-
-                <button className="primary my-4">Zapisz i dodaj</button>
+                {preInput('Dzienny limit kilometrów & Cena za dzień (PLN)', 'Maksymalna dzienna ilość kilometrów zwolnionych z dodatkowych opłat oraz szacowana stawka dzienna.')}
+                <div className="grid gap-2 grid-cols-2">
+                    <div>
+                        <h3 className="mt-2 -mb-1">Limit kilometrów</h3>
+                        <input type="number" value={kilLimit}
+                        onChange={ev => setKilLimit(ev.target.value)} max="9999" min="1"
+                        placeholder="np.: 500"/>
+                    </div>
+                    <div>
+                        <h3 className="mt-2 -mb-1">Cena za dzień</h3>
+                        <input type="number" value={price}
+                        onChange={ev => setPrice(ev.target.value)} max="9999" min="1"
+                        placeholder="np.: 350"/>
+                    </div>
+                </div>
+                <button className="primary my-4">Zapisz</button>
             </form>
         </div>
     );

@@ -12,8 +12,9 @@ const carSchema = new mongoose.Schema({
     features: [String],
     extraInfo: String,
     kilLimit: Number,
+    price: Number,
 });
 
 const CarModel = mongoose.model('Car', carSchema);
 
-module.exports = CarModel;
+module.exports = CarModel

@@ -6,7 +6,7 @@ import axios from "axios";
 export default function CarsPage(){
     const [cars, setCars] = useState([]);
     useEffect(() => {
-        axios.get('/cars').then(({data}) => {
+        axios.get('/user-cars').then(({data}) => {
             setCars(data);
         });
     }, []);

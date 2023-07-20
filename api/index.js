@@ -113,7 +113,7 @@ app.post('/cars', (req, res) => {
         title, engineType, gearBoxType,
         prodYear, seats, addedPhotos,
         description, features, extraInfo,
-        kilLimit,
+        kilLimit, price,
     } = req.body;
     jsonWebToken.verify(token, jsonWebTokenSecret, {}, async (err, userData) => {
         if (err) throw err;
@@ -129,12 +129,13 @@ app.post('/cars', (req, res) => {
             features,
             extraInfo,
             kilLimit,
+            price,
         });
         res.json(carDoc);
     });
 });
 
-app.get('/cars', (req, res) => {
+app.get('/user-cars', (req, res) => {
     const {token} = req.cookies;
     jsonWebToken.verify(token, jsonWebTokenSecret, {}, async (err, userData) => {
         const {id} = userData;
@@ -153,7 +154,7 @@ app.put('/cars', async (req, res) => {
         id, title, engineType, gearBoxType,
         prodYear, seats, addedPhotos,
         description, features, extraInfo,
-        kilLimit,
+        kilLimit, price,
     } = req.body;
     jsonWebToken.verify(token, jsonWebTokenSecret, {}, async (err, userData) => {
         if (err) throw err;
@@ -170,12 +171,18 @@ app.put('/cars', async (req, res) => {
                 features,
                 extraInfo,
                 kilLimit,
+                price,
             });
             await carDoc.save();
             res.json('ok');
         }
     });
 });
+
+
+app.get('/cars', async (req, res) => {
+    res.json(await Car.find());
+})
 
 app.listen(4000);
 
