@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import BookingWidget from "../BookingWidget";
 
 export default function CarPage(){
     const {id} = useParams();
@@ -24,7 +25,7 @@ export default function CarPage(){
             <div className="absolute inset-0 bg-black text-white min-h-screen">
                 <div className="bg-black p-8 grid gap-4">
                     <div>
-                        <h2 className="text-3xl mb-4">Galeria zdjęć samochodu: {car.title}</h2>
+                        <h2 className="text-3xl mb-4 mr-48">Galeria zdjęć samochodu: {car.title}</h2>
                         <button onClick={() => {
                             const closeButton = document.getElementById("close-button");
                             setShowAllImages(false);
@@ -49,7 +50,7 @@ export default function CarPage(){
     }
 
     return(
-        <div className="mt-4 bg-gray-100 -mx-8 px-8 py-8">
+        <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">
             <h1 className="text-3xl"><span className="font-semibold">Samochód: </span>{car.title}</h1>
             <div className="mt-8 grid gap-2 grid-cols-2 my-4 border border-gray-300 px-8 py-2">
                 <div>
@@ -73,21 +74,21 @@ export default function CarPage(){
             </div>
 
             <div className="relative">
-                <div className="grid gap-2 grid-cols-[2fr_1fr]">
+                <div className="grid gap-2 rounded-3xl overflow-hidden grid-cols-[2fr_1fr]">
                     <div>
                         {car.photos?.[0] && (
                             <div>
-                                <img className="w-full aspect-square object-cover" src={'http://localhost:4000/uploads/'+car.photos[0]} alt="" />
+                                <img onClick={() => setShowAllImages(true)} className="cursor-pointer w-full aspect-square object-cover" src={'http://localhost:4000/uploads/'+car.photos[0]} alt="" />
                             </div>       
                         )}
                     </div>
                     <div className="grid">
                         {car.photos?.[1] && (
-                            <img className="aspect-square object-cover" src={'http://localhost:4000/uploads/'+car.photos[1]} alt="" />
+                            <img onClick={() => setShowAllImages(true)} className="cursor-pointer aspect-square object-cover" src={'http://localhost:4000/uploads/'+car.photos[1]} alt="" />
                         )}
                         <div className="overflow-hidden">
                             {car.photos?.[2] && (
-                                <img className="aspect-square object-cover relative top-2" src={'http://localhost:4000/uploads/'+car.photos[2]} alt="" />
+                                <img onClick={() => setShowAllImages(true)} className="cursor-pointer aspect-square object-cover relative top-2" src={'http://localhost:4000/uploads/'+car.photos[2]} alt="" />
                             )}
                         </div>
                     </div>
@@ -99,9 +100,27 @@ export default function CarPage(){
                     Pokaż więcej zdjęć
                 </button>
             </div>
-            <div className="my-4 grid gap-4 border border-gray-300 px-8 py-2">
-                <h2 className="text-2xl">Opis:</h2>
-                <p className="">{car.description}</p>
+            <div className="mt-8 mb-8 grid gap-8 grid-cols-1 md:grid-cols-[2fr_1fr]">
+                <div>
+                    <div className="mt-4 mb-8">
+                        <h2 className="text-2xl font-semibold mb-2">Opis</h2>
+                        {car.description}
+                    </div>
+                    <div className="text-xl">
+                        <span className="font-semibold">Dzienny limit kilometrów:</span> {car.kilLimit}
+                    </div>
+                </div>
+                <div>
+                    <BookingWidget car={car}/>
+                </div>
+            </div>
+            <div className="bg-white -mx-8 px-8 py-8 border-t">
+                <div>
+                    <h2 className="text-2xl font-semibold mb-2">Informacje dodatkowe</h2>
+                </div>
+                <div className="mt-2 mb-4 text-sm text-gray-700 leading-5">
+                    {car.extraInfo}
+                </div>
             </div>
         </div>
     );
