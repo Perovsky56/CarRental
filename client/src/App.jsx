@@ -10,6 +10,8 @@ import ProfilePage from './pages/ProfilePage';
 import CarsPage from './pages/CarsPage';
 import CarsFormPage from './pages/CarsFormPage';
 import CarPage from './pages/CarPage';
+import RentalsPage from './pages/RentalsPage';
+import RentalPage from './pages/RentalPage';
 
 axios.defaults.baseURL = 'http://127.0.0.1:4000';
 axios.defaults.withCredentials = true;
@@ -27,6 +29,8 @@ function App() {
           <Route path="/account/cars/new" element={<CarsFormPage/>} />
           <Route path="/account/cars/:id" element={<CarsFormPage/>} />
           <Route path="/car/:id" element={<CarPage/>}/>
+          <Route path="/account/rentals" element={<RentalsPage />} />
+          <Route path="/account/rentals/:id" element={<RentalPage />} />
         </Route>
       </Routes>
     </UserContextProvider>

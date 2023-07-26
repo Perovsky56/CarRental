@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
 const User = require('./models/User.js');
 const Car = require('./models/Car.js');
+const Rental = require('./models/Rental.js');
 const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
@@ -25,6 +26,15 @@ app.use(cors({
 }));
 
 mongoose.connect(process.env.MONGO_URL);
+
+function getUserDataFromReq(req) {
+    return new Promise((resolve, reject) => {
+        jsonWebToken.verify(req.cookies.token, jsonWebTokenSecret, {}, async (err, userData) => {
+            if (err) throw err;
+            resolve(userData);
+        });
+    });
+};
 
 app.get('/test', (req, res) => {
     res.json('test ok');
@@ -183,6 +193,28 @@ app.put('/cars', async (req, res) => {
 app.get('/cars', async (req, res) => {
     res.json(await Car.find());
 })
+
+app.post('/rentals', async (req, res) => {
+    const userData = await getUserDataFromReq(req);
+    const {
+        car, collectCar, returnCar, name, mobile, price
+    } = req.body;
+
+    Rental.create({
+        car, collectCar, returnCar, name, mobile, price,
+        user:userData.id,
+    }).then((doc) => {
+        res.json(doc);
+    }).catch((err) => {
+        throw err;
+    });
+});
+
+app.get('/rentals', async (req, res) => {
+    const userData = await getUserDataFromReq(req);
+    res.json( await Rental.find({user:userData.id}).populate('car') );
+});
+
 
 app.listen(4000);
 
