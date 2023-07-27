@@ -6,7 +6,7 @@ export default function Header(){
     const {user} = useContext(UserContext);
     return (
         <header className='inline-block md:flex justify-between pb-4'>
-            <Link to={'/'} href="" className="flex items-center gap-1 border border-gray-300 rounded-2xl px-4 h-16">
+            <Link to={'/'} href="" className="flex items-center gap-1 border border-gray-300 rounded-2xl px-4 h-16 hover:shadow hover:shadow-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -24,7 +24,7 @@ export default function Header(){
                     </svg>
                 </button>
             </div> */}
-            <Link to={user?'/account':'/login'} className='flex items-center gap-4 border border-gray-300 rounded-2xl py-2 px-8'>
+            <Link to={user?'/account':'/login'} className='flex items-center gap-4 border border-gray-300 rounded-2xl py-2 px-8 hover:shadow hover:shadow-gray-200'>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-primary">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
