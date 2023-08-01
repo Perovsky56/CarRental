@@ -11,10 +11,22 @@ export default function BookingWidget({car}){
     const [mobile, setMobile] = useState('');
     const [redirect, setRedirect] = useState('');
     const {user} = useContext(UserContext);
+    const [isFormComplete, setIsFormComplete] = useState(true);
 
     useEffect(() => {
-        setName(user.name);
+        if (user && user.name) {
+            setName(user.name);
+        }
     }, [user]);
+
+    useEffect(() => {
+        if ((collectCar > 0 && returnCar > 0) && (!name || !mobile)){
+            setIsFormComplete(false);
+        } else {
+            setIsFormComplete(true);
+        }
+    }, [name, mobile])
+
 
     let numberOfDays = 0;
     if (collectCar && returnCar) {
@@ -22,6 +34,15 @@ export default function BookingWidget({car}){
     };
 
     async function rentThisCar() {
+        if (!name || !mobile || !collectCar || !returnCar){
+            setIsFormComplete(false);
+            return;
+        }
+
+        if (collectCar > returnCar){
+            return;
+        }
+
         const response = await axios.post('/rentals', {
             collectCar, returnCar, name, mobile,
             car:car._id,
@@ -68,6 +89,11 @@ export default function BookingWidget({car}){
                     </div>
                 )}
             </div>
+            {!isFormComplete && (
+                <div className="mt-2 text-red-500">
+                    Uzupełnij pola formularza.
+                </div>
+            )}
             <button onClick={rentThisCar} className="primary mt-4">
                 Wynamij ten pojazd
                 {numberOfDays > 0 && (
