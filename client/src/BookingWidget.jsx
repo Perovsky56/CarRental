@@ -3,6 +3,7 @@ import {differenceInCalendarDays} from "date-fns";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "./UserContext";
+import BookingMap from "./BookingMap";
 
 export default function BookingWidget({car}){
     const [collectCar, setCollectCar] = useState('');
@@ -12,6 +13,17 @@ export default function BookingWidget({car}){
     const [redirect, setRedirect] = useState('');
     const {user} = useContext(UserContext);
     const [isFormComplete, setIsFormComplete] = useState(true);
+    const [kilometers, setKilometers] = useState(0);
+
+    // useEffect(() => {
+    //     axios.get("/api/getMapApiKey")
+    //       .then(response => {
+    //         setMapApiKey(response.data);
+    //       })
+    //       .catch(error => {
+    //         console.error("Błąd podczas pobierania klucza API: ", error);
+    //       });
+    //   }, []);
 
     useEffect(() => {
         if (user && user.name) {
@@ -26,7 +38,6 @@ export default function BookingWidget({car}){
             setIsFormComplete(true);
         }
     }, [name, mobile])
-
 
     let numberOfDays = 0;
     if (collectCar && returnCar) {
@@ -66,13 +77,18 @@ export default function BookingWidget({car}){
                     <label>Odbiór: </label>
                     <input type="date"
                     value={collectCar}
+                    required
                     onChange={ev => setCollectCar(ev.target.value)} />
                 </div>
                 <div className="py-3 px-4 border-t">
                     <label>Zwrot: </label>
                     <input type="date"
                     value={returnCar}
+                    required
                     onChange={ev => setReturnCar(ev.target.value)}/>
+                </div>
+                <div className="py-3 px-4 border-t">
+                    <BookingMap />
                 </div>
                 {numberOfDays > 0 && (
                     <div className="py-3 px-4 border-t">
@@ -80,18 +96,20 @@ export default function BookingWidget({car}){
                         <input type="text"
                         placeholder="Jan Kowalski"
                         value={name}
+                        required
                         onChange={ev => setName(ev.target.value)} />
                         <label>Numer telefonu kontaktowego:</label>
                         <input type="tel"
                         placeholder="123456789"
                         value={mobile}
+                        required
                         onChange={ev => setMobile(ev.target.value)} />
                     </div>
                 )}
             </div>
             {!isFormComplete && (
                 <div className="mt-2 text-red-500">
-                    Uzupełnij pola formularza.
+                    Uzupełnij poprawnie pola formularza.
                 </div>
             )}
             <button onClick={rentThisCar} className="primary mt-4">
