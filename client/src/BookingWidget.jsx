@@ -15,16 +15,6 @@ export default function BookingWidget({car}){
     const [isFormComplete, setIsFormComplete] = useState(true);
     const [kilometers, setKilometers] = useState(0);
 
-    // useEffect(() => {
-    //     axios.get("/api/getMapApiKey")
-    //       .then(response => {
-    //         setMapApiKey(response.data);
-    //       })
-    //       .catch(error => {
-    //         console.error("Błąd podczas pobierania klucza API: ", error);
-    //       });
-    //   }, []);
-
     useEffect(() => {
         if (user && user.name) {
             setName(user.name);
@@ -87,23 +77,25 @@ export default function BookingWidget({car}){
                     required
                     onChange={ev => setReturnCar(ev.target.value)}/>
                 </div>
-                <div className="py-3 px-4 border-t">
-                    <BookingMap />
-                </div>
                 {numberOfDays > 0 && (
-                    <div className="py-3 px-4 border-t">
-                        <label>Twoje imię oraz nazwisko:</label>
-                        <input type="text"
-                        placeholder="Jan Kowalski"
-                        value={name}
-                        required
-                        onChange={ev => setName(ev.target.value)} />
-                        <label>Numer telefonu kontaktowego:</label>
-                        <input type="tel"
-                        placeholder="123456789"
-                        value={mobile}
-                        required
-                        onChange={ev => setMobile(ev.target.value)} />
+                    <div>
+                        <div className="py-3 px-4 border-t">
+                            <label>Twoje imię oraz nazwisko:</label>
+                            <input type="text"
+                            placeholder="Jan Kowalski"
+                            value={name}
+                            required
+                            onChange={ev => setName(ev.target.value)} />
+                            <label>Numer telefonu kontaktowego:</label>
+                            <input type="tel"
+                            placeholder="123456789"
+                            value={mobile}
+                            required
+                            onChange={ev => setMobile(ev.target.value)} />
+                        </div>
+                        <div className="py-3 px-4 border-t">
+                            <BookingMap />
+                        </div>
                     </div>
                 )}
             </div>

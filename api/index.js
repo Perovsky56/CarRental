@@ -215,17 +215,17 @@ app.get('/rentals', async (req, res) => {
     res.json( await Rental.find({user:userData.id}).populate('car') );
 });
 
-app.get("/api/getMapApiKey", (req, res) => {
-    // Możesz wygenerować klucz API na podstawie swoich potrzeb, np. zmienna środowiskowa
-    const mapApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+// app.get("/api/getMapApiKey", (req, res) => {
+//     // Możesz wygenerować klucz API na podstawie swoich potrzeb, np. zmienna środowiskowa
+//     const mapApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   
-    // Sprawdź, czy klucz API jest dostępny
-    if (mapApiKey) {
-      res.json(mapApiKey);
-    } else {
-      res.status(500).json({ error: "Klucz API nie został ustawiony na serwerze." });
-    }
-  });
+//     // Sprawdź, czy klucz API jest dostępny
+//     if (mapApiKey) {
+//       res.json(mapApiKey);
+//     } else {
+//       res.status(500).json({ error: "Klucz API nie został ustawiony na serwerze." });
+//     }
+//   });
 
 app.listen(4000);
 

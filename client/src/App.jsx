@@ -12,11 +12,23 @@ import CarsFormPage from './pages/CarsFormPage';
 import CarPage from './pages/CarPage';
 import RentalsPage from './pages/RentalsPage';
 import RentalPage from './pages/RentalPage';
+import { useState, useEffect } from 'react';
 
 axios.defaults.baseURL = 'http://127.0.0.1:4000';
 axios.defaults.withCredentials = true;
 
 function App() {
+  // const [mapApiKey, setMapApiKey] = useState("");
+  // useEffect(() => {
+  //     axios.get("/api/getMapApiKey")
+  //       .then(response => {
+  //         setMapApiKey(response.data);
+  //       })
+  //       .catch(error => {
+  //         console.error("Błąd podczas pobierania klucza API: ", error);
+  //       });
+  // }, []);
+
   return (
     <UserContextProvider>
       <Routes>

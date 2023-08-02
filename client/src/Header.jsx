@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 
 export default function Header(){
+
     const {user} = useContext(UserContext);
     return (
         <header className='inline-block md:flex justify-between pb-4'>
