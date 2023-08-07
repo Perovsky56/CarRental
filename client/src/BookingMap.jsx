@@ -2,9 +2,15 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLoadScript, GoogleMap, MarkerF, InfoWindowF } from "@react-google-maps/api";
 
-export default function BookingMap() {
+export default function BookingMap({ onUpdateBookingInfo }) {
     const [apiKey, setApiKey] = useState("AIzaSyD3uhYvzkVZMfY3aiNpsvp9opMGFiaDmNk");
     const [markerOpen, setMarkerOpen] = useState(false);
+    const [routeDistances, setRouteDistances] = useState({
+      pickupDistance: null,
+      returnDistance: null,
+    });
+    const totalDistance = parseFloat(routeDistances.pickupDistance) + parseFloat(routeDistances.returnDistance);
+    const totalPrice = totalDistance * 2.50;
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: apiKey,
@@ -23,6 +29,65 @@ export default function BookingMap() {
 
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [markerAddresses, setMarkerAddresses] = useState({});
+
+    const updateBookingInfo = () => {
+        const totalDistance = parseFloat(routeDistances.pickupDistance) + parseFloat(routeDistances.returnDistance);
+        const totalPrice = totalDistance * 2.50;
+        const bookingInfo = {
+          pickupCoordinates: markers.find(marker => marker.title === "ODBIÓR")?.position || null,
+          returnCoordinates: markers.find(marker => marker.title === "ZWROT")?.position || null,
+          totalDistance: totalDistance,
+          totalPrice: totalPrice,
+        };
+
+        onUpdateBookingInfo(bookingInfo);
+      };
+
+    useEffect(() => {
+      const calculateRouteDistances = async () => {
+          if (markers.length >= 2) {
+              const origin = `${basePosition.lat},${basePosition.lng}`;
+              const odbiorMarker = markers.find(marker => marker.title === "ODBIÓR");
+              const zwrotMarker = markers.find(marker => marker.title === "ZWROT");
+
+              if (odbiorMarker && zwrotMarker) {
+                const pickup = `${odbiorMarker.position.lat},${odbiorMarker.position.lng}`;
+                const returnLocation = `${zwrotMarker.position.lat},${zwrotMarker.position.lng}`;
+
+                try {
+                  const responsePickup = await axios.get('/calculate-distance', {
+                      params: {
+                          origins: origin,
+                          destinations: pickup,
+                          apiKey: apiKey,
+                      },
+                  });
+  
+                  const responseReturn = await axios.get('/calculate-distance', {
+                      params: {
+                          origins: origin,
+                          destinations: returnLocation,
+                          apiKey: apiKey,
+                      },
+                  });
+  
+                  const pickupDistance = responsePickup.data.rows[0]?.elements[0]?.distance?.text || "Nie znaleziono trasy";
+                  const returnDistance = responseReturn.data.rows[0]?.elements[0]?.distance?.text || "Nie znaleziono trasy";
+
+                  setRouteDistances({
+                      pickupDistance: pickupDistance,
+                      returnDistance: returnDistance,
+                  });
+              } catch (error) {
+                  console.error('Błąd podczas pobierania danych odległości z Google Maps API', error);
+              }
+            }
+          }
+      };
+
+      calculateRouteDistances();
+      updateBookingInfo();
+    }, [markers, apiKey]);
 
     const updateMarkerAddresses = (updatedMarkers) => {
         const newAddresses = {};
@@ -49,7 +114,7 @@ export default function BookingMap() {
           position: { lat: e.latLng.lat(), lng: e.latLng.lng() },
           title: markers.length === 1 ? "ODBIÓR" : "ZWROT",
         };
-        console.log(e.latLng + ", " + e.latLng);
+        console.log(newMarker.title + ": " + e.latLng.lat() + ", " + e.latLng.lng());
         setMarkers([...markers, newMarker]);
         setSelectedMarker(null);
       }
@@ -177,7 +242,17 @@ export default function BookingMap() {
                 <MarkerF
                     key={marker.id}
                     position={marker.position}
-                    draggable={true}
+                    icon={{
+                      url: marker.title === "CarRental - baza"
+                          ? "http://localhost:4000/uploads/icons/CarRental.png"
+                          : marker.title === "ODBIÓR"
+                          ? "http://localhost:4000/uploads/icons/arrowU.png"
+                          : marker.title === "ZWROT"
+                          ? "http://localhost:4000/uploads/icons/arrowD.png"
+                          : "",
+                      scaledSize: new window.google.maps.Size(25, 25),
+                  }}
+                    draggable={marker.title !== "CarRental - baza"}
                     onClick={() => handleMarkerClick(marker)}
                     onDblClick={() => handleMarkerDoubleClick(marker.id)}
                     onDragEnd={(e) => handleMarkerDrag(marker.id, e.latLng.toJSON())}
@@ -206,6 +281,17 @@ export default function BookingMap() {
                         </a>
                     </div>
                 ))}
+                <div className="mt-4">
+                  {routeDistances.pickupDistance && routeDistances.returnDistance && (
+                      <div>
+                          <p>BAZA - MIEJSCE ODBIORU: {parseFloat(routeDistances.pickupDistance)} km</p>
+                          <p>BAZA - MIEJSCE ZWROTU: {parseFloat(routeDistances.returnDistance)} km</p>
+                          <p>SUMARYCZNIE:<br /> 
+                            {totalDistance.toFixed(2)} km * 2.50 zł = {totalPrice.toFixed(2)} zł
+                          </p>
+                      </div>
+                  )}
+                </div>
             </div>
         </div>
     </div>

@@ -10,6 +10,8 @@ const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs');
+const axios = require('axios');
+
 
 require('dotenv').config();
 const app = express();
@@ -22,7 +24,9 @@ app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(cors({
     credentials: true,
-    origin: 'http://127.0.0.1:5173',
+    origin: ['http://127.0.0.1:5173', 'https://maps.googleapis.com'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
 }));
 
 mongoose.connect(process.env.MONGO_URL);
@@ -226,6 +230,19 @@ app.get('/rentals', async (req, res) => {
 //       res.status(500).json({ error: "Klucz API nie został ustawiony na serwerze." });
 //     }
 //   });
+
+app.get('/calculate-distance', async (req, res) => {
+    const { origins, destinations, apiKey } = req.query;
+    const apiUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&mode=driving&key=${apiKey}`;
+    
+    try {
+        const response = await axios.get(apiUrl);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Błąd podczas przetwarzania zapytania:', error);
+        res.status(500).json({ error: 'Błąd podczas pobierania danych z Google Maps API' });
+    }
+});
 
 app.listen(4000);
 

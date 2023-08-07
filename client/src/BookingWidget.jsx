@@ -14,6 +14,12 @@ export default function BookingWidget({car}){
     const {user} = useContext(UserContext);
     const [isFormComplete, setIsFormComplete] = useState(true);
     const [kilometers, setKilometers] = useState(0);
+    const [bookingInfo, setBookingInfo] = useState({
+        pickupCoordinates: null,
+        returnCoordinates: null,
+        totalDistance: 0,
+        totalPrice: 0,
+      });
 
     useEffect(() => {
         if (user && user.name) {
@@ -33,6 +39,10 @@ export default function BookingWidget({car}){
     if (collectCar && returnCar) {
         numberOfDays = differenceInCalendarDays(new Date(returnCar), new Date(collectCar)) + 1;
     };
+
+    const handleUpdateBookingInfo = (info) => {
+        setBookingInfo(info);
+      };
 
     async function rentThisCar() {
         if (!name || !mobile || !collectCar || !returnCar){
@@ -94,7 +104,7 @@ export default function BookingWidget({car}){
                             onChange={ev => setMobile(ev.target.value)} />
                         </div>
                         <div className="py-3 px-4 border-t">
-                            <BookingMap />
+                            <BookingMap onUpdateBookingInfo={handleUpdateBookingInfo} />
                         </div>
                     </div>
                 )}
