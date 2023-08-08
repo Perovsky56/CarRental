@@ -9,9 +9,11 @@ export default function BookingMap({ onUpdateBookingInfo }) {
       pickupDistance: null,
       returnDistance: null,
     });
-    const totalDistance = parseFloat(routeDistances.pickupDistance) + parseFloat(routeDistances.returnDistance);
-    const totalPrice = totalDistance * 2.50;
-
+    const [pricePerKm, setPricePerKm] = useState(5.0);
+    // let totalDistance = parseFloat(routeDistances.pickupDistance) + parseFloat(routeDistances.returnDistance);
+    // let totalPrice = totalDistance * pricePerKm;
+    const [totalDistance, setTotalDistance] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: apiKey,
     });
@@ -20,7 +22,6 @@ export default function BookingMap({ onUpdateBookingInfo }) {
         lat: 50.65422287639508,
         lng: 17.905023525353826,
       };
-
     const [center, setCenter] = useState(basePosition);
 
     const [markers, setMarkers] = useState([
@@ -30,9 +31,7 @@ export default function BookingMap({ onUpdateBookingInfo }) {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [markerAddresses, setMarkerAddresses] = useState({});
 
-    const updateBookingInfo = () => {
-        const totalDistance = parseFloat(routeDistances.pickupDistance) + parseFloat(routeDistances.returnDistance);
-        const totalPrice = totalDistance * 2.50;
+    const updateBookingInfo = (totalDistance, totalPrice) => {
         const bookingInfo = {
           pickupCoordinates: markers.find(marker => marker.title === "ODBIÓR")?.position || null,
           returnCoordinates: markers.find(marker => marker.title === "ZWROT")?.position || null,
@@ -41,19 +40,19 @@ export default function BookingMap({ onUpdateBookingInfo }) {
         };
 
         onUpdateBookingInfo(bookingInfo);
+        console.log(totalPrice);
       };
 
     useEffect(() => {
       const calculateRouteDistances = async () => {
-          if (markers.length >= 2) {
+          if (markers.length > 1 ) {
               const origin = `${basePosition.lat},${basePosition.lng}`;
               const odbiorMarker = markers.find(marker => marker.title === "ODBIÓR");
               const zwrotMarker = markers.find(marker => marker.title === "ZWROT");
-
               if (odbiorMarker && zwrotMarker) {
                 const pickup = `${odbiorMarker.position.lat},${odbiorMarker.position.lng}`;
                 const returnLocation = `${zwrotMarker.position.lat},${zwrotMarker.position.lng}`;
-
+                
                 try {
                   const responsePickup = await axios.get('/calculate-distance', {
                       params: {
@@ -78,16 +77,28 @@ export default function BookingMap({ onUpdateBookingInfo }) {
                       pickupDistance: pickupDistance,
                       returnDistance: returnDistance,
                   });
-              } catch (error) {
-                  console.error('Błąd podczas pobierania danych odległości z Google Maps API', error);
-              }
+                  setTotalDistance(parseFloat(pickupDistance)+parseFloat(returnDistance));
+                  setTotalPrice(totalDistance * pricePerKm);
+                  updateBookingInfo(totalDistance, totalPrice);
+                } catch (error) {
+                    console.error('Błąd podczas pobierania danych odległości z Google Maps API', error);
+                }
+            }
+            else {
+              setRouteDistances({
+                pickupDistance: null,
+                returnDistance: null,
+              });
+              setTotalDistance(0);
+              setTotalPrice(0);
+              updateBookingInfo(totalPrice, totalDistance);
+              return;
             }
           }
       };
-
       calculateRouteDistances();
-      updateBookingInfo();
-    }, [markers, apiKey]);
+      updateBookingInfo(totalPrice, totalDistance);
+    }, [markers, apiKey, totalPrice, totalDistance]);
 
     const updateMarkerAddresses = (updatedMarkers) => {
         const newAddresses = {};
@@ -122,6 +133,7 @@ export default function BookingMap({ onUpdateBookingInfo }) {
   
     const handleMarkerClick = (marker) => {
       setSelectedMarker(marker);
+      updateBookingInfo(totalPrice, totalDistance);
     };
   
     const handleMarkerDoubleClick = (markerId) => {
@@ -138,13 +150,15 @@ export default function BookingMap({ onUpdateBookingInfo }) {
         } else {
           setMarkers(markers.filter(marker => marker.id !== odbiorMarker.id));
         }
+        
       } else if (markerId === zwrotMarker?.id) {
         if (odbiorMarker) {
           setMarkers(markers.filter(marker => marker.id !== zwrotMarker.id));
         }
-      } else {
-        setMarkers(markers.filter((marker) => marker.id !== markerId));
-      }
+        } else {
+          setMarkers(markers.filter((marker) => marker.id !== markerId));
+        }
+      updateBookingInfo(0, 0);
     };
   
     const handleMarkerDrag = (markerId, position) => {
@@ -155,6 +169,7 @@ export default function BookingMap({ onUpdateBookingInfo }) {
           )
         );
       }
+      updateBookingInfo();
     };
 
     if (loadError) {
@@ -166,7 +181,7 @@ export default function BookingMap({ onUpdateBookingInfo }) {
     }
 
     return (
-    <div>
+    <div className="relative z-10">
         <GoogleMap
             zoom={13}
             center={center}
@@ -268,9 +283,9 @@ export default function BookingMap({ onUpdateBookingInfo }) {
             ))}
         </GoogleMap>
         <div className="mt-4">
-            <div className="grid md:grid-cols-1 xl:grid-cols-2 gap-x-8 gap-y-2">
+            <div className="grid xl:grid-cols-1 2xl:grid-cols-2 gap-x-8 gap-y-2">
                 {markers.slice(1).map((marker) => (
-                    <div key={marker.id}>
+                    <div key={marker.id} className="whitespace-nowrap">
                         <a
                             target="_blank"
                             rel="noopener noreferrer"
@@ -281,18 +296,24 @@ export default function BookingMap({ onUpdateBookingInfo }) {
                         </a>
                     </div>
                 ))}
-                <div className="mt-4">
-                  {routeDistances.pickupDistance && routeDistances.returnDistance && (
-                      <div>
-                          <p>BAZA - MIEJSCE ODBIORU: {parseFloat(routeDistances.pickupDistance)} km</p>
-                          <p>BAZA - MIEJSCE ZWROTU: {parseFloat(routeDistances.returnDistance)} km</p>
-                          <p>SUMARYCZNIE:<br /> 
-                            {totalDistance.toFixed(2)} km * 2.50 zł = {totalPrice.toFixed(2)} zł
-                          </p>
-                      </div>
-                  )}
-                </div>
             </div>
+            <div className="mt-4 mb-2">
+                {markers.length > 2 && routeDistances.pickupDistance && routeDistances.returnDistance && (
+                    <div className="grid xl:grid-cols-1 2xl:grid-cols-3 gap-x-2 gap-y-4 whitespace-nowrap text-sm">
+                        <div className="text-center shadow shadow-gray-300 rounded-xl p-2">
+                          <p><span className="italic">Od bazy do<br/>MIEJSCA ODBIORU:<br/></span>{parseFloat(routeDistances.pickupDistance)} km</p>
+                        </div>
+                        <div className="text-center shadow shadow-gray-300 rounded-xl p-2">
+                          <p><span className="italic">Od bazy do<br/>MIEJSCA ZWROTU:<br/></span>{parseFloat(routeDistances.returnDistance)} km</p>
+                        </div>
+                        <div className="text-center shadow shadow-gray-300 rounded-xl p-2">
+                          <p><span className="font-bold">CENA:</span><br /> 
+                            {totalDistance.toFixed(1)} km * {pricePerKm} zł = <br/>{totalPrice.toFixed(2)} zł
+                          </p>
+                        </div>               
+                    </div>
+                )}
+              </div>
         </div>
     </div>
     );

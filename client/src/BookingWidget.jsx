@@ -28,6 +28,10 @@ export default function BookingWidget({car}){
     }, [user]);
 
     useEffect(() => {
+        console.log(bookingInfo);
+    }, [bookingInfo])
+
+    useEffect(() => {
         if ((collectCar > 0 && returnCar > 0) && (!name || !mobile)){
             setIsFormComplete(false);
         } else {
@@ -104,7 +108,7 @@ export default function BookingWidget({car}){
                             onChange={ev => setMobile(ev.target.value)} />
                         </div>
                         <div className="py-3 px-4 border-t">
-                            <BookingMap onUpdateBookingInfo={handleUpdateBookingInfo} />
+                            <BookingMap onUpdateBookingInfo={handleUpdateBookingInfo}/>
                         </div>
                     </div>
                 )}
@@ -116,8 +120,11 @@ export default function BookingWidget({car}){
             )}
             <button onClick={rentThisCar} className="primary mt-4">
                 Wynamij ten pojazd
-                {numberOfDays > 0 && (
-                    <span> [{numberOfDays * car.price} PLN]</span>
+                {numberOfDays > 0 && bookingInfo.totalPrice > 0 && bookingInfo.pickupCoordinates && bookingInfo.returnCoordinates ? (
+                    <span> [{(numberOfDays * car.price + bookingInfo.totalPrice).toFixed(2)} PLN]</span>
+                ) : null}
+                {numberOfDays > 0 && bookingInfo.totalPrice === 0 && (
+                    <span> [{numberOfDays * car.price} PLN] </span>
                 )}
             </button>
         </div>

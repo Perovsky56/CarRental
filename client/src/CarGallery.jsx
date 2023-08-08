@@ -6,7 +6,7 @@ export default function CarGallery({car}) {
     if(showAllImages) {
         window.scrollTo(0, 0);
         return (
-            <div className="absolute inset-0 bg-black text-white min-h-screen">
+            <div className="absolute inset-0 bg-black text-white min-h-screen z-20">
                 <div className="bg-black p-8 grid gap-4">
                     <div>
                         <h2 className="text-3xl mb-4 mr-48">Galeria zdjęć samochodu: {car.title}</h2>
