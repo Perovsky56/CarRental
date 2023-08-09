@@ -8,6 +8,9 @@ const rentalSchema = new mongoose.Schema({
     name: {type:String, required:true},
     mobile: {type:String, required: true},
     price: Number,
+    withTransport: Boolean,
+    pickupCoordinates: {type:String, required: false},
+    returnCoordinates: {type:String, required: false},
 });
 
 const RentalModel = mongoose.model('Rental', rentalSchema);

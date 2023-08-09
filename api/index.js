@@ -201,11 +201,11 @@ app.get('/cars', async (req, res) => {
 app.post('/rentals', async (req, res) => {
     const userData = await getUserDataFromReq(req);
     const {
-        car, collectCar, returnCar, name, mobile, price
+        car, collectCar, returnCar, name, mobile, price, withTransport, pickupCoordinates, returnCoordinates,
     } = req.body;
 
     Rental.create({
-        car, collectCar, returnCar, name, mobile, price,
+        car, collectCar, returnCar, name, mobile, price, withTransport, pickupCoordinates, returnCoordinates,
         user:userData.id,
     }).then((doc) => {
         res.json(doc);

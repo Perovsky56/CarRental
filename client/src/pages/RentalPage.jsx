@@ -40,9 +40,33 @@ export default function RentalPage(){
                     <h2 className="text-2xl mb-6">Informacje o twoim wynajmie:</h2>
                     <RentalDays rental={rental} />
                 </div>
+                {rental.withTransport && (
+                    <div className="flex flex-row gap-4">
+                        <div className="shrink flex justify-center w-48">
+                            <a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href={`https://maps.google.com?q=${rental.pickupCoordinates}`}
+                                className="py-2 px-4 bg-gray-300 rounded-md shadow shadow-gray-400 hover:bg-gray-500 hover:text-white transition duration-300 block text-center flex items-center justify-center"
+                            >
+                                Wybrane miejsce ODBIORU
+                            </a>
+                        </div>
+                        <div className="shrink flex justify-center w-48">
+                            <a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href={`https://maps.google.com?q=${rental.returnCoordinates}`}
+                                className="py-2 px-4 bg-gray-300 rounded-md shadow shadow-gray-400 hover:bg-gray-500 hover:text-white transition duration-300 block text-center flex items-center justify-center"
+                            >
+                                Wybrane miejsce ZWROTU
+                            </a>
+                        </div>
+                    </div>
+                )}
                 <div className="bg-primary p-6 text-white rounded-2xl">
                     <div>Szacowana cena:</div>
-                    <div className="text-3xl">{rental.price} PLN</div>
+                    <div className="text-3xl">{(rental.price).toFixed(2)} PLN</div>
                 </div>
             </div>
             <CarGallery car={rental.car} />

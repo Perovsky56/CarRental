@@ -13,23 +13,20 @@ export default function BookingWidget({car}){
     const [redirect, setRedirect] = useState('');
     const {user} = useContext(UserContext);
     const [isFormComplete, setIsFormComplete] = useState(true);
-    const [kilometers, setKilometers] = useState(0);
     const [bookingInfo, setBookingInfo] = useState({
         pickupCoordinates: null,
         returnCoordinates: null,
         totalDistance: 0,
         totalPrice: 0,
-      });
+    });
+    const [pickupCoordinates, setPickupCoordinates] = useState("");
+    const [returnCoordinates, setReturnCoordinates] = useState("");
 
     useEffect(() => {
         if (user && user.name) {
             setName(user.name);
         }
     }, [user]);
-
-    useEffect(() => {
-        console.log(bookingInfo);
-    }, [bookingInfo])
 
     useEffect(() => {
         if ((collectCar > 0 && returnCar > 0) && (!name || !mobile)){
@@ -48,21 +45,65 @@ export default function BookingWidget({car}){
         setBookingInfo(info);
       };
 
+    const priceFunction = () => {
+        if (numberOfDays > 0 && bookingInfo.totalPrice > 0 && bookingInfo.pickupCoordinates && bookingInfo.returnCoordinates){
+            return <span> [{(numberOfDays * car.price + bookingInfo.totalPrice).toFixed(2)} PLN]</span>
+        } else if (numberOfDays > 0) {
+            return <span> [{numberOfDays * car.price} PLN] </span>
+        }
+    }
+
     async function rentThisCar() {
         if (!name || !mobile || !collectCar || !returnCar){
             setIsFormComplete(false);
             return;
         }
-
+    
         if (collectCar > returnCar){
             return;
         }
+    
+        let endPrice = numberOfDays * car.price;
+        let pickupC = null;
+        let returnC = null;
+        let withTrans = false;
 
+        if (bookingInfo.totalDistance !== 0){
+            endPrice += bookingInfo.totalPrice;
+        }
+   
+        if (bookingInfo.pickupCoordinates) {
+            const latitude = bookingInfo.pickupCoordinates.lat;
+            const longitude = bookingInfo.pickupCoordinates.lng;
+            pickupC = `${latitude}, ${longitude}`;
+        } else {
+            endPrice = numberOfDays * car.price;
+        }
+    
+        if (bookingInfo.returnCoordinates) {
+            const latitude = bookingInfo.returnCoordinates.lat;
+            const longitude = bookingInfo.returnCoordinates.lng;
+            returnC = `${latitude}, ${longitude}`;
+            withTrans = true;
+        } else {
+            endPrice = numberOfDays * car.price;
+        }
+    
         const response = await axios.post('/rentals', {
-            collectCar, returnCar, name, mobile,
-            car:car._id,
-            price:numberOfDays * car.price,
+            collectCar, 
+            returnCar, 
+            name, 
+            mobile,
+            car: car._id,
+            price: endPrice,
+            withTransport: withTrans,
+            pickupCoordinates: pickupC,
+            returnCoordinates: returnC,
         });
+    
+        console.log(pickupC);
+        console.log(returnC);
+        
         const rentalId = response.data._id;
         setRedirect(`/account/rentals/${rentalId}`);
     };
@@ -72,61 +113,58 @@ export default function BookingWidget({car}){
     }
 
     return (
-        <div className="bg-white shadow p-4 rounded-2xl">
-            <div className="text-2xl text-center">
-                Cena bazowa: {car.price}PLN / za dzień
-            </div>
-            <div className="border rounded-2xl mt-4">
-                <div className="py-3 px-4">
-                    <label>Odbiór: </label>
-                    <input type="date"
-                    value={collectCar}
-                    required
-                    onChange={ev => setCollectCar(ev.target.value)} />
+        user ? (
+            <div className="bg-white shadow p-4 rounded-2xl">
+                <div className="text-2xl text-center">
+                    Cena bazowa: {car.price}PLN / za dzień
                 </div>
-                <div className="py-3 px-4 border-t">
-                    <label>Zwrot: </label>
-                    <input type="date"
-                    value={returnCar}
-                    required
-                    onChange={ev => setReturnCar(ev.target.value)}/>
+                <div className="border rounded-2xl mt-4">
+                    <div className="py-3 px-4">
+                        <label>Odbiór: </label>
+                        <input type="date"
+                        value={collectCar}
+                        required
+                        onChange={ev => setCollectCar(ev.target.value)} />
+                    </div>
+                    <div className="py-3 px-4 border-t">
+                        <label>Zwrot: </label>
+                        <input type="date"
+                        value={returnCar}
+                        required
+                        onChange={ev => setReturnCar(ev.target.value)}/>
+                    </div>
+                    {numberOfDays > 0 && (
+                        <div>
+                            <div className="py-3 px-4 border-t">
+                                <label>Twoje imię oraz nazwisko:</label>
+                                <input type="text"
+                                placeholder="Jan Kowalski"
+                                value={name}
+                                required
+                                onChange={ev => setName(ev.target.value)} />
+                                <label>Numer telefonu kontaktowego:</label>
+                                <input type="tel"
+                                placeholder="123456789"
+                                value={mobile}
+                                required
+                                onChange={ev => setMobile(ev.target.value)} />
+                            </div>
+                            <div className="py-3 px-4 border-t">
+                                <BookingMap onUpdateBookingInfo={handleUpdateBookingInfo}/>
+                            </div>
+                        </div>
+                    )}
                 </div>
-                {numberOfDays > 0 && (
-                    <div>
-                        <div className="py-3 px-4 border-t">
-                            <label>Twoje imię oraz nazwisko:</label>
-                            <input type="text"
-                            placeholder="Jan Kowalski"
-                            value={name}
-                            required
-                            onChange={ev => setName(ev.target.value)} />
-                            <label>Numer telefonu kontaktowego:</label>
-                            <input type="tel"
-                            placeholder="123456789"
-                            value={mobile}
-                            required
-                            onChange={ev => setMobile(ev.target.value)} />
-                        </div>
-                        <div className="py-3 px-4 border-t">
-                            <BookingMap onUpdateBookingInfo={handleUpdateBookingInfo}/>
-                        </div>
+                {!isFormComplete && (
+                    <div className="mt-2 text-red-500">
+                        Uzupełnij poprawnie pola formularza.
                     </div>
                 )}
+                <button onClick={rentThisCar} className="primary mt-4">
+                    Wynamij ten pojazd
+                    {priceFunction()}
+                </button>
             </div>
-            {!isFormComplete && (
-                <div className="mt-2 text-red-500">
-                    Uzupełnij poprawnie pola formularza.
-                </div>
-            )}
-            <button onClick={rentThisCar} className="primary mt-4">
-                Wynamij ten pojazd
-                {numberOfDays > 0 && bookingInfo.totalPrice > 0 && bookingInfo.pickupCoordinates && bookingInfo.returnCoordinates ? (
-                    <span> [{(numberOfDays * car.price + bookingInfo.totalPrice).toFixed(2)} PLN]</span>
-                ) : null}
-                {numberOfDays > 0 && bookingInfo.totalPrice === 0 && (
-                    <span> [{numberOfDays * car.price} PLN] </span>
-                )}
-            </button>
-        </div>
-    )
+        ) : null
+    );
 }
