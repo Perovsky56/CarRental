@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AccountNav from "../AccountNav";
 import { Navigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function CarsFormPage(){
     const {id} = useParams();
@@ -86,6 +87,11 @@ export default function CarsFormPage(){
     return (
         <div>
             <AccountNav />
+            <Link to={'/account/cars'} className="flex justify-end">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 transform transition-transform duration-200 ease hover:-translate-x-2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+            </Link>
             <form onSubmit={saveCar}>
                 {preInput('Nazwa samochodu', 'Pole to powinno przedstawić markę, model oraz generację samochodu.')}
                 <input type="text" value={title} onChange={ev => setTitle(ev.target.value)} placeholder="np.: Volkswagen Golf 4"/>

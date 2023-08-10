@@ -18,7 +18,7 @@ export default function IndexPage(){
                     <Link to={'/car/'+car._id} key={car._id}>
                         <div className="bg-gray-200 mb-2 rounded-2xl flex">
                             {car.photos?.[0] && (
-                                <img className="rounded-2xl object-cover aspect-square" src={'http://localhost:4000/uploads/'+car.photos?.[0]} alt="" />
+                                <img className="rounded-2xl object-cover aspect-square w-full" src={'http://localhost:4000/uploads/'+car.photos?.[0]} alt="" />
                             )}
                         </div>
                         <h2 className="text-lg font-bold leading-4">{car.title}</h2>

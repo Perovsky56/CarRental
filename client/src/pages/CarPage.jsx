@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BookingWidget from "../BookingWidget";
 import CarGallery from "../CarGallery";
+import { Link } from "react-router-dom";
 
 export default function CarPage(){
     const {id} = useParams();
@@ -22,7 +23,14 @@ export default function CarPage(){
 
     return(
         <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">
-            <h1 className="text-3xl"><span className="font-semibold">Samochód: </span>{car.title}</h1>
+            <div className="flex justify-between">
+                <h1 className="text-3xl"><span className="font-semibold">Samochód: </span>{car.title}</h1>
+                <Link to={'/'} className="inline-block relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 transform transition-transform duration-200 ease hover:-translate-x-2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </Link>
+            </div>
             <div className="mt-8 grid gap-2 grid-cols-2 my-4 border border-gray-300 px-8 py-2">
                 <div>
                     <h2 className="my-2 block underline">Silnik: {car.engineType}</h2>
