@@ -133,7 +133,7 @@ export default function CarsFormPage(){
                     <div>
                         <h3 className="mt-2 -mb-1">Cena za dzień</h3>
                         <input type="number" value={price}
-                        onChange={ev => setPrice(ev.target.value)} max="9999" min="1"
+                        onChange={ev => setPrice(ev.target.value)} max="99999" min="1"
                         placeholder="np.: 350"/>
                     </div>
                 </div>
