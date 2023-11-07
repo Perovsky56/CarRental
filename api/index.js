@@ -51,6 +51,7 @@ app.post('/register', async (req,res) => {
             name,
             email,
             password:bcrypt.hashSync(password, bcryptSalt),
+            adminFlag:false,
         });
         res.json(userDoc);
     } catch (e) {
