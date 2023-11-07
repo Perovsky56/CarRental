@@ -9,7 +9,7 @@ export default function Header(){
     return (
         <header className='flex justify-between mt-1 sm:mt-4 pb-4 gap-2'>
             <Link to={'/'} href="" className="items-center flex border border-gray-300 px-2 py-2 sm:px-8 sm:py-4 w-32 sm:w-48 md:w-60 hover:shadow hover:shadow-gray-300 transition duration-200">
-                <CarRentalLogo/>
+                <CarRentalLogo />
             </Link>
             <br/>
             <Link to={user?'/account':'/login'} className='flex items-center gap-2 md:gap-4 border border-gray-300 py-2 px-4 md:px-8 hover:shadow hover:shadow-gray-300 transition duration-200'>
