@@ -21,18 +21,14 @@ export default function IndexPage(){
                                 <img className="rounded-2xl object-cover aspect-square w-full" src={'http://localhost:4000/uploads/'+car.photos?.[0]} alt="" />
                             )}
                         </div>
-                        <h2 className="text-lg font-bold leading-4">{car.title}</h2>
-                        <h3 className="text-md">Silnik: {car.engineType}</h3>
-                        <h3 className="text-md leading-4">Skrzynia biegów: {car.gearBoxType}</h3>
+                        <h2 className="text-lg font-bold leading-5">{car.title}</h2>
+                        <h3 className="text-md">Silnik: <span className="text-sm">{car.engineType}</span></h3>
+                        <h3 className="text-md leading-4">Skrzynia biegów: <span className="text-sm">{car.gearBoxType}</span></h3>
                         <div className="mt-2">
                             CENA: {car.price} PLN za dzień<span className="text-red-600 font-semibold">*</span>
                         </div>
                     </Link>
                 ))}
-            </div>
-            <div className="mt-12">
-                <hr />
-                <h3 className="text-red-600 font-semibold">* - cena jest wartością bazową, która może ulec zmianie w trakcie rezerwacji pojazdu.</h3>
             </div>
         </div>
     );
