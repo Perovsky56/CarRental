@@ -85,9 +85,9 @@ app.get('/profile', (req, res) => {
     if (token){
         jsonWebToken.verify(token, jsonWebTokenSecret, {}, async (err, userData) => {
             if (err) throw err;
-            const {name, email, _id} = await User.findById(userData.id);
+            const {name, email, _id, adminFlag} = await User.findById(userData.id);
 
-            res.json({name, email, _id});
+            res.json({name, email, _id, adminFlag});
         })
     } else {
         res.json(null);

@@ -9,7 +9,8 @@ export default function AccountNav({props}) {
         subpage = 'profile';
     }
 
-    const { ready, user, setUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
+    
     function linkClasses(type=null){
         let classes = 'inline-flex text-xs md:text-lg gap-1 py-2 px-6 rounded-full';
         if(type === subpage){

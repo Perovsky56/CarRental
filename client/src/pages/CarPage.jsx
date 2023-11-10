@@ -9,6 +9,21 @@ export default function CarPage(){
     const {id} = useParams();
     const [car, setCar] = useState(null);
 
+    const featureNameMap = {
+        'manual-ac': 'Klimatyzacja manualna',
+        'auto-ac': 'Klimatyzacja automatyczna',
+        'gps': 'System nawigacji GPS',
+        'audio-usb': 'System audio z portem USB',
+        'bt': 'Bluetooth i możliwość łączenia z telefonem',
+        'f-park-sensor': 'Czujniki parkowania przód',
+        'r-park-sensor': 'Czujniki parkowania tył',
+        'park-cam': 'Kamera cofania',
+        'ccs': 'Tempomat manualny (CCS)',
+        'acc': 'Tempomat aktywny (ACC)',
+        'blindspot-sensor': 'Czujniki martwego pola',
+        'isofix': 'Isofix (system mocowania fotelików dziecięcych)',
+      };
+    
 
     useEffect(() => {
         if (!id) {
@@ -20,6 +35,9 @@ export default function CarPage(){
     }, [id]);
 
     if (!car) return '';
+
+      // Zamiana identyfikatorów funkcji na nazwy
+    const featureNames = car.features ? car.features.map(featureId => featureNameMap[featureId]) : [];
 
     return(
         <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">
@@ -69,9 +87,19 @@ export default function CarPage(){
             </div>
             <div className="bg-white -mx-8 px-8 py-8 border-t">
                 <div>
-                    <h2 className="text-2xl font-semibold mb-2">Informacje dodatkowe</h2>
+                    <h2 className="text-2xl font-semibold mb-2">Wyposażenie:</h2>
                 </div>
                 <div className="mt-2 mb-4 text-sm text-gray-700 leading-5">
+                {featureNames.map((feature, index) => (
+                    <div key={index}>&#x2022; {feature}</div>
+                ))}
+                </div>
+            </div>
+            <div className="bg-white -mx-8 px-8 py-8 border-t">
+                <div>
+                    <h2 className="text-2xl font-semibold mb-2">Informacje dodatkowe</h2>
+                </div>
+                <div className="mt-2 mb-2 text-sm text-gray-700 leading-5">
                     {car.extraInfo}
                 </div>
             </div>
