@@ -31,12 +31,14 @@ export default function ProfilePage(){
     if (toIndex) {
         return <Navigate to={toIndex} />
     }
+
+
     return(
        <div>
             <AccountNav />
             {subpage === 'profile' && (
                 <div className="text-center max-w-xl mx-auto">
-                    Zalogowany jako {user.name} ({user.email})<br />
+                    Zalogowany jako {user.adminFlag ? 'administrator' : 'użytkownik'} {user.name} ({user.email})<br />
                     <button onClick={logout} className="primary max-w-sm mt-2">Wyloguj się</button>
                 </div>
             )}
