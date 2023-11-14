@@ -18,16 +18,6 @@ axios.defaults.baseURL = 'http://127.0.0.1:4000';
 axios.defaults.withCredentials = true;
 
 function App() {
-  // const [mapApiKey, setMapApiKey] = useState("");
-  // useEffect(() => {
-  //     axios.get("/api/getMapApiKey")
-  //       .then(response => {
-  //         setMapApiKey(response.data);
-  //       })
-  //       .catch(error => {
-  //         console.error("Błąd podczas pobierania klucza API: ", error);
-  //       });
-  // }, []);
 
   return (
     <UserContextProvider>

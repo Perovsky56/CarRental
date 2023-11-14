@@ -2,7 +2,7 @@ export default function Footer(){
     return (
         <div className="mt-12 bg-black pb-16">
             <div className="p-4">
-                <h3 className="text-gray-400 px-8">UWAGA: Wyświetlana cena jest wartością bazową, która może ulec zmianie w trakcie rezerwacji pojazdu.</h3>
+                <h3 className="text-gray-400 px-8"><span className="text-red-600 font-semibold">* </span>UWAGA: Wyświetlana cena jest wartością bazową, która może ulec zmianie w trakcie rezerwacji pojazdu.</h3>
             </div>
             <div className="px-8">
                 <hr className="border-orange-500"></hr>
@@ -10,7 +10,7 @@ export default function Footer(){
             <div className="grid gap-8 grid-cols-1 md:grid-cols-[1fr_1fr] text-gray-500 p-4 text-xs">
                 <div className="px-16">
                     <div>
-                        <h4 className="text-lg py-4 text-gray-200">| carRental.</h4>
+                        <h4 className="text-2xl py-4 text-gray-200">| carRental.</h4>
                         <div className="px-4 text-lg">
                             <p>Oferujemy szeroki wybór pojazdów dostępnych do wynajęcia.</p>
                             <p>Dostarczamy samochody na wybrane adresy przez całą dobę.</p>
@@ -20,11 +20,11 @@ export default function Footer(){
                 </div>
                 <div className="px-16">
                     <div>
-                        <h4 className="text-lg py-4 text-gray-200">| KONTAKT</h4>
+                        <h4 className="text-2xl py-4 text-gray-200">| KONTAKT</h4>
                         <div className="px-4 text-lg">
-                            <p>Adres: ul. Prószkowska 76, 46-020 Opole</p>
+                            <p>Adres: ul.&nbsp;Prószkowska&nbsp;76, 46&#8209;020&nbsp;Opole</p>
                             <p>Email: p.siemiginowski@student.po.edu.pl</p>
-                            <p>Telefon: +48 123 456 789</p>
+                            <p>Telefon: +48&nbsp;123&nbsp;456&nbsp;789</p>
                         </div>
                     </div>
                 </div>
