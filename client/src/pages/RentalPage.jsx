@@ -35,14 +35,14 @@ export default function RentalPage(){
                     </svg>
                 </Link>
             </div>
-            <div className="bg-gray-200 p-6 mb-8 rounded-2xl flex items-center justify-between">
-                <div>
+            <div className="bg-gray-200 p-6 mb-8 rounded-2xl xl:flex items-center justify-between">
+                <div className="w-full lg:w-auto">
                     <h2 className="text-2xl mb-6">Informacje o twoim wynajmie:</h2>
                     <RentalDays rental={rental} />
                 </div>
                 {rental.withTransport && (
-                    <div className="flex flex-row gap-4">
-                        <div className="shrink flex justify-center w-48">
+                    <div className="flex flex-col md:flex-row p-5 xl:p-0 gap-4">
+                        <div className="shrink flex justify-center lg:w-48">
                             <a
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -52,7 +52,7 @@ export default function RentalPage(){
                                 Wybrane miejsce ODBIORU
                             </a>
                         </div>
-                        <div className="shrink flex justify-center w-48">
+                        <div className="shrink flex justify-center lg:w-48">
                             <a
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -64,7 +64,7 @@ export default function RentalPage(){
                         </div>
                     </div>
                 )}
-                <div className="bg-primary p-6 text-white rounded-2xl">
+                <div className="bg-primary p-6 text-white rounded-2xl text-center">
                     <div>Szacowana cena:</div>
                     <div className="text-3xl">{(rental.price).toFixed(2)} PLN</div>
                 </div>

@@ -89,8 +89,10 @@ export default function CarPage(){
                 <div>
                     <h2 className="text-2xl font-semibold mb-2">Wyposażenie:</h2>
                 </div>
-                <div className="mt-2 mb-4 text-sm text-gray-700 leading-5">
-                {featureNames.map((feature, index) => (
+                <div className="text-lg mt-2 mb-2 text-sm text-gray-700 leading-6">
+                {featureNames
+                .sort((a, b) => a.localeCompare(b))
+                .map((feature, index) => (
                     <div key={index}>&#x2022; {feature}</div>
                 ))}
                 </div>
