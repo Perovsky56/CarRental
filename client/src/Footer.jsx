@@ -23,7 +23,7 @@ export default function Footer(){
                         <h4 className="text-2xl py-4 text-gray-200">| KONTAKT</h4>
                         <div className="px-4 text-lg">
                             <p>Adres: ul.&nbsp;Prószkowska&nbsp;76, 46&#8209;020&nbsp;Opole</p>
-                            <p>Email: p.siemiginowski@student.po.edu.pl</p>
+                            <p>Email: p.siemiginowski<span className="break-words">@</span>student.po.edu.pl</p>
                             <p>Telefon: +48&nbsp;123&nbsp;456&nbsp;789</p>
                         </div>
                     </div>
