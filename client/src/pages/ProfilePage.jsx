@@ -38,7 +38,7 @@ export default function ProfilePage(){
             <AccountNav />
             {subpage === 'profile' && (
                 <div className="text-center max-w-xl mx-auto">
-                    Zalogowany jako {user.adminFlag ? 'administrator' : 'użytkownik'} {user.name} ({user.email})<br />
+                    Zalogowany jako {user.adminFlag ? 'pracownik' : 'użytkownik'} {user.name} ({user.email})<br />
                     <button onClick={logout} className="primary max-w-sm mt-2">Wyloguj się</button>
                 </div>
             )}
