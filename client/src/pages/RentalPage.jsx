@@ -27,7 +27,7 @@ export default function RentalPage(){
         <div className="my-8">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl mb-8"><span className="font-semibold">Samochód: </span>{rental.car.title}</h1>
+                    <h1 className="text-lg md:text-3xl mb-8"><span className="font-semibold">Samochód: </span>{rental.car.title}</h1>
                 </div>
                 <Link to={'/account/rentals'} className="inline-block relative">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 transform transition-transform duration-200 ease hover:-translate-x-2">
