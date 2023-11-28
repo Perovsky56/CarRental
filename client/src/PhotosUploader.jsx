@@ -6,11 +6,17 @@ export default function PhotosUploader({addedPhotos, onChange}) {
 
     async function addPhotoByLink(ev){
         ev.preventDefault();
-        if (photoLink){
-            const {data:filename} = await axios.post('/upload-by-link', {link: photoLink});
-            onChange(prev => {
-                return [...prev, filename];
-            });
+        if (photoLink && photoLink.endsWith('.jpg')){
+            try {
+                const {data:filename} = await axios.post('/upload-by-link', {link: photoLink});
+                onChange(prev => {
+                    return [...prev, filename];
+                });
+            } catch (error) {
+                console.error('Nie udało się wczytać obrazka');
+            }
+        } else {
+            console.error('Link jest nieprawidłowy lub nie kończy się na .jpg');
         }
         setPhotoLink('');
     }
