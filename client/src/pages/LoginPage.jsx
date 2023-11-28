@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import {UserContext} from "../UserContext";
+import { toast } from 'react-toastify';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -14,13 +15,17 @@ export default function LoginPage() {
             const {data} = await axios.post('/login', {email, password});
             if(data){
                 setUser(data);
-                alert('Logowanie udane.');
+                toast.success('Logowanie udane.');
                 setRedirect(true);
             } else {
                 throw e;
             }
         } catch (e) {
-            alert('Logowanie nieudane.')
+            if (e.response && e.response.status === 422){
+                toast.error('Niepoprawny email lub hasło.');
+            } else {
+                toast.error('Logowanie nieudane.');
+            }
         }
     };
 

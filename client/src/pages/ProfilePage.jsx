@@ -4,6 +4,7 @@ import { Link, Navigate, redirect, useParams } from "react-router-dom";
 import axios from "axios";
 import CarsPage from "./CarsPage";
 import AccountNav from "../AccountNav";
+import { toast } from "react-toastify";
 
 export default function ProfilePage(){
     const [toIndex, setToIndex] = useState(null);
@@ -16,6 +17,7 @@ export default function ProfilePage(){
 
     async function logout() {
         await axios.post('/logout');
+        toast.success('Wylogowano.');
         setToIndex('/');
         setUser(null);
     }

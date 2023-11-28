@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {useState} from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function RegisterPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     async function registerUser(ev){
         ev.preventDefault();
@@ -15,9 +17,10 @@ export default function RegisterPage() {
                 email,
                 password,
             });
-            alert('Rejestracja udana. Możesz przejść do logowania.');
+            toast.success('Rejestracja udana. Możesz przejść do logowania.');
+            navigate('/login');
         } catch (e) {
-            alert('Rejestracja nieudana. Spróbuj ponownie później.');
+            toast.error('Rejestracja nieudana. Spróbuj ponownie później.');
         }
     }
 
