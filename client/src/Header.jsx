@@ -8,11 +8,11 @@ export default function Header(){
     const {user} = useContext(UserContext);
     return (
         <header className='flex justify-between mt-1 sm:mt-4 pb-4 gap-2'>
-            <Link to={'/'} href="" className="items-center flex border border-gray-300 px-2 py-2 sm:px-8 sm:py-4 w-32 sm:w-48 md:w-60 hover:shadow hover:shadow-gray-300 transition duration-200">
+            <Link to={'/'} href="" className="items-center flex rounded-md border border-gray-300 px-2 py-2 sm:px-8 sm:py-4 w-32 sm:w-48 md:w-60 hover:shadow hover:shadow-gray-300 transition duration-200">
                 <CarRentalLogo />
             </Link>
             <br/>
-            <Link to={user?'/account':'/login'} className='flex items-center gap-2 md:gap-4 border border-gray-300 py-2 px-4 md:px-8 hover:shadow hover:shadow-gray-300 transition duration-200'>
+            <Link to={user?'/account':'/login'} className='flex items-center gap-2 md:gap-4 rounded-md border border-gray-300 py-2 px-4 md:px-8 hover:shadow hover:shadow-gray-300 transition duration-200'>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 md:w-10 md:h-10 text-primary">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>

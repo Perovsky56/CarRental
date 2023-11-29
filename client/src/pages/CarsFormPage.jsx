@@ -137,7 +137,7 @@ export default function CarsFormPage(){
                         placeholder="np.: 350"/>
                     </div>
                 </div>
-                <button className="primary my-4">Zapisz</button>
+                <button className="flex mx-auto justify-center primary my-6 max-w-md">Zapisz</button>
             </form>
         </div>
     );
