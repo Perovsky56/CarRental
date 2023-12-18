@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "./UserContext";
 import BookingMap from "./BookingMap";
+import { toast } from 'react-toastify';
 
 export default function BookingWidget({car}){
     const [collectCar, setCollectCar] = useState('');
@@ -51,6 +52,26 @@ export default function BookingWidget({car}){
         } else if (numberOfDays > 0) {
             return <span> [{numberOfDays * car.price} PLN] </span>
         }
+    }
+
+    function handleDateChange(ev, setDate) {
+        const selectedDate = new Date(ev.target.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const maxDate = addMonths(new Date(), 3);
+        if (ev.target.value === '') {
+            setDate('');
+        } else if (selectedDate < today || selectedDate > maxDate) {
+            setDate('');
+            toast.error('Wybrana data jest niepoprawna lub nie mieści się w dostępnym terminie.');
+        } else {
+            setDate(ev.target.value);
+        }
+    }
+
+    function addMonths(date, months) {
+        date.setMonth(date.getMonth() + months);
+        return date;
     }
 
     async function rentThisCar() {
@@ -122,16 +143,20 @@ export default function BookingWidget({car}){
                     <div className="py-3 px-4">
                         <label>Odbiór: </label>
                         <input type="date"
+                        min={new Date().toISOString().split('T')[0]}
+                        max={addMonths(new Date(), 3).toISOString().split('T')[0]}
                         value={collectCar}
                         required
-                        onChange={ev => setCollectCar(ev.target.value)} />
+                        onChange={ev => handleDateChange(ev, setCollectCar)} />
                     </div>
                     <div className="py-3 px-4 border-t">
                         <label>Zwrot: </label>
                         <input type="date"
+                        min={new Date().toISOString().split('T')[0]}
+                        max={addMonths(new Date(), 3).toISOString().split('T')[0]}
                         value={returnCar}
                         required
-                        onChange={ev => setReturnCar(ev.target.value)}/>
+                        onChange={ev => handleDateChange(ev, setReturnCar)}/>
                     </div>
                     {numberOfDays > 0 && (
                         <div>
